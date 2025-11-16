@@ -1,13 +1,34 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { RegistrationForm } from "@/components/RegistrationForm";
+import { TravelBlog } from "@/components/TravelBlog";
+import { PriceCalculator } from "@/components/PriceCalculator";
+import { ConfirmationPage } from "@/components/ConfirmationPage";
+
+type PageView = "registration" | "blog" | "calculator" | "confirmation";
 
 const Index = () => {
+  const [currentPage, setCurrentPage] = useState<PageView>("registration");
+
+  const handlePageChange = (page: PageView) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {currentPage === "registration" && (
+        <RegistrationForm onSuccess={() => handlePageChange("blog")} />
+      )}
+      {currentPage === "blog" && (
+        <TravelBlog onNext={() => handlePageChange("calculator")} />
+      )}
+      {currentPage === "calculator" && (
+        <PriceCalculator onConfirm={() => handlePageChange("confirmation")} />
+      )}
+      {currentPage === "confirmation" && (
+        <ConfirmationPage onStartOver={() => handlePageChange("registration")} />
+      )}
+    </>
   );
 };
 
